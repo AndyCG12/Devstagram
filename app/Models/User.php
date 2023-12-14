@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'imagen'
     ];
 
     /**
@@ -42,4 +44,26 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
+
+    //obtener los likes del usuario
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+    //obtener a los seguidores
+    public function followers(){
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
+    }
+    //saber si se esta siguiendo un perfil
+    public function siguiendo(User $user){
+        return $this->followers->contains($user->id);
+    }
+    //obtener a los que se estan siguiendo
+    public function followings(){
+        return $this->belongsToMany(User::class,'followers', 'follower_id', 'user_id');
+
+    }
 }
